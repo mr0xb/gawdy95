@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gawdy95 Kitchen Sink</title>
+<link rel="stylesheet" href="gawdy95.css">
+<script src="gawdy95.js" defer></script>
+</head>
+<body class="g95">
+
+<div class="g95-wrap g95-stack" style="--g:28px">
+
+  <!-- HERO -->
+  <header class="g95-u-center g95-u-rel">
+    <div class="g95-starburst g95-starburst--red g95-corner" style="right:4%">100% Gawdy!</div>
+    <h1 class="wa wa-purple wa-xl wa-wobble">Gawdy 95</h1><br>
+    <h2 class="wa wa-rainbow wa-sm wa-tilt g95-u-mt">Prototype ugly. Prototype fast.</h2>
+    <div class="g95-rainbow-bar g95-rainbow-bar--thick g95-u-mt"></div>
+    <div class="g95-marquee g95-u-mt"><span>*** WELCOME TO THE INFORMATION SUPERHIGHWAY *** BEST VIEWED IN 800x600 *** NOW WITH 100% MORE DINO NUGGIES ***</span></div>
+  </header>
+
+  <!-- WORDART -->
+  <section class="g95-window g95-pop">
+    <div class="g95-titlebar"><span class="g95-titlebar__icon">🅰️</span><span class="g95-titlebar__text">wordart.exe</span>
+      <span class="g95-titlebar__btns"><button data-g95-act="min">_</button><button data-g95-act="max">□</button><button class="g95-close" data-g95-act="close">✕</button></span></div>
+    <div class="g95-menubar"><span><u>F</u>ill</span><span><u>S</u>hape</span><span><u>H</u>elp</span></div>
+    <div class="g95-window__body g95-bg-stars g95-u-center">
+      <div class="g95-auto" style="--g:30px">
+        <span class="wa wa-purple wa-md">purple</span>
+        <span class="wa wa-cyan wa-md">cyan</span>
+        <span class="wa wa-red wa-md">red</span>
+        <span class="wa wa-white wa-md">white</span>
+        <span class="wa wa-outline wa-md">outline</span>
+        <span class="wa wa-rainbow wa-md">rainbow</span>
+        <span class="wa wa-chrome wa-md">chrome</span>
+        <span class="wa wa-fire wa-md">fire</span>
+        <span class="wa wa-slime wa-md">slime</span>
+        <span class="wa wa-gold wa-md">gold</span>
+        <span class="wa wa-purple wa-md wa-fan">fan</span>
+        <span class="wa wa-cyan wa-md wa-steep">steep</span>
+        <span class="wa wa-fire wa-md wa-stretch">stretch</span>
+        <span class="wa wa-rainbow wa-md wa-hue">hue</span>
+        <span class="wa wa-gold wa-md wa-pulse">pulse</span>
+      </div>
+    </div>
+    <div class="g95-statusbar"><span>15 object(s)</span><span>Compose: <code>class="wa wa-FILL wa-SIZE wa-SHAPE"</code></span></div>
+  </section>
+
+  <div class="g95-tape"></div>
+
+  <div class="g95-grid">
+
+    <!-- FORM -->
+    <section class="g95-window">
+      <div class="g95-titlebar"><span class="g95-titlebar__icon">📝</span><span class="g95-titlebar__text">Sign Up - Wizard</span>
+        <span class="g95-titlebar__btns"><button>?</button><button class="g95-close" data-g95-act="close">✕</button></span></div>
+      <form class="g95-window__body g95-form" onsubmit="return false">
+        <div><label class="g95-label" for="n">Your name:</label><input id="n" class="g95-input" value="Sir Charles of St Cheese"></div>
+        <div><label class="g95-label" for="r">Region:</label>
+          <div class="g95-selectwrap"><select id="r" class="g95-select"><option>us-east-1</option><option>us-west-2</option><option>eu-west-1</option></select></div></div>
+        <div><label class="g95-label" for="m">Message:</label><textarea id="m" class="g95-textarea">Please send nuggies.</textarea></div>
+        <fieldset class="g95-groove"><legend>Nugget style</legend>
+          <label class="g95-radio"><input type="radio" name="s" checked> Dino-shaped</label><br>
+          <label class="g95-radio"><input type="radio" name="s"> Blob (ew)</label>
+        </fieldset>
+        <label class="g95-check"><input type="checkbox" checked> Subscribe to nugget-letter</label>
+        <div><label class="g95-label">Hunger</label><input type="range" class="g95-range" value="70"></div>
+        <div class="g95-progress g95-progress--anim"><i></i></div>
+        <div class="g95-btn-row">
+          <button class="g95-btn g95-btn--default">OK</button>
+          <button class="g95-btn">Cancel</button>
+          <button class="g95-btn" disabled>Apply</button>
+          <button class="g95-btn g95-btn--rainbow" data-g95-open="#dlg" type="button">Alert!</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- TABS + TABLE -->
+    <section class="g95-window">
+      <div class="g95-titlebar"><span class="g95-titlebar__icon">📊</span><span class="g95-titlebar__text">estimate.xls - Excel</span>
+        <span class="g95-titlebar__btns"><button data-g95-act="min">_</button><button class="g95-close" data-g95-act="close">✕</button></span></div>
+      <div class="g95-window__body g95-stack" style="--g:0">
+        <div class="g95-tabs" role="tablist">
+          <button class="g95-tab" role="tab" aria-selected="true" aria-controls="t1">Table</button>
+          <button class="g95-tab" role="tab" aria-selected="false" aria-controls="t2">List</button>
+          <button class="g95-tab" role="tab" aria-selected="false" aria-controls="t3">Tree</button>
+        </div>
+        <div class="g95-tabpanel" id="t1">
+          <table class="g95-table g95-table--sheet">
+            <thead><tr><th></th><th>Milestone</th><th>Goal</th><th class="is-num">Weeks</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>M0</td><td>Test run</td><td class="is-num">6</td></tr>
+              <tr><td>2</td><td>M1</td><td>Blip &lt; 30 s</td><td class="is-num">14</td></tr>
+              <tr><td>3</td><td>M2</td><td>TRUE ZERO!!</td><td class="is-num">18</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="g95-tabpanel" id="t2" hidden>
+          <ul class="g95-list"><li class="is-selected">Grukk Stonejaw</li><li>Brokk Nuggetbeard</li><li>Sir Charles of St Cheese</li></ul>
+        </div>
+        <div class="g95-tabpanel" id="t3" hidden>
+          <ul class="g95-tree"><li>C:\<ul><li>Nuggets<ul><li class="is-file">dino.exe</li><li class="is-file">blob.exe</li></ul></li><li class="is-file">autoexec.bat</li></ul></li></ul>
+        </div>
+      </div>
+      <div class="g95-statusbar"><span>Ready</span><span>CAP</span><span>NUM</span></div>
+    </section>
+  </div>
+
+  <!-- ALERTS / STICKERS -->
+  <div class="g95-grid g95-grid--3">
+    <div class="g95-note">Sticky note. <br>Remember to buy nuggies.</div>
+    <div class="g95-alert"><span class="g95-dialog__glyph">⛔</span><div><b>DANGER.TXT</b><br>Never click “Destroy”.</div></div>
+    <div class="g95-u-center">
+      <span class="g95-stamp">Not good</span><br>
+      <span class="g95-badge">New!</span> <span class="g95-construction">Under construction</span>
+    </div>
+  </div>
+
+  <div class="g95-u-center g95-u-white g95-u-shadow">
+    You are visitor number<br>
+    <span data-g95-count="001337"></span><br>
+    <span class="g95-led"></span> online <span class="g95-led g95-led--red"></span> busy <span class="g95-led g95-led--off"></span> idle
+  </div>
+
+  <!-- DESKTOP ICONS -->
+  <div class="g95-icons">
+    <button class="g95-icon"><span class="g95-icon__img">💻</span><span>My Computer</span></button>
+    <button class="g95-icon"><span class="g95-icon__img">🗑️</span><span>Recycle Bin</span></button>
+    <button class="g95-icon"><span class="g95-icon__img">🌐</span><span>The Internet</span></button>
+    <button class="g95-icon"><span class="g95-icon__img">🦖</span><span>dino.exe</span></button>
+  </div>
+</div>
+
+<!-- DRAGGABLE WINDOW -->
+<div class="g95-window g95-pop" data-g95-drag style="position:fixed; right:24px; bottom:64px; width:300px; z-index:50">
+  <div class="g95-titlebar"><span class="g95-titlebar__icon">🖱️</span><span class="g95-titlebar__text">Drag me</span>
+    <span class="g95-titlebar__btns"><button class="g95-close" data-g95-act="close">✕</button></span></div>
+  <div class="g95-window__body g95-notepad">Add <code>data-g95-drag</code> to any window.</div>
+</div>
+
+<!-- MODAL -->
+<div class="g95-modal" id="dlg" hidden>
+  <div class="g95-window g95-pop g95-dialog">
+    <div class="g95-titlebar"><span class="g95-titlebar__text">Error</span><span class="g95-titlebar__btns"><button class="g95-close" data-g95-close>✕</button></span></div>
+    <div class="g95-window__body">
+      <div class="g95-dialog__row"><span class="g95-dialog__glyph">❌</span><p>A fatal exception 0E has occurred at 0028:C0011E36. Continue anyway?</p></div>
+      <div class="g95-dialog__actions"><button class="g95-btn g95-btn--default" data-g95-close>OK</button><button class="g95-btn" data-g95-close>Cancel</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- TASKBAR -->
+<nav class="g95-taskbar">
+  <div class="g95-start">
+    <div class="g95-menu" id="start" hidden>
+      <button>🗂️ Programs</button><button>📄 Documents</button><button>⚙️ Settings</button><hr><button>🔌 Shut Down…</button>
+    </div>
+    <button class="g95-btn" data-g95-toggle="#start"><span class="g95-logo"></span> Start</button>
+  </div>
+  <div class="g95-tasks"><button class="g95-btn is-pressed">Gawdy 95</button></div>
+  <div class="g95-tray">🔊 <span data-g95-clock>12:00</span></div>
+</nav>
+
+</body>
+</html>
