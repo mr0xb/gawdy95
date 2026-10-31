@@ -1,0 +1,77 @@
+# gawdy95-react
+
+Typed React components for [Gawdy95](../README.md), the Windows 95 + WordArt CSS framework. The components render Gawdy95's own class names, so the root `gawdy95.css` stays the single source of styling. Everything `gawdy95.js` does (window buttons, dragging, Start menu, tabs, list selection, modals, clock, hit counter) is reimplemented as React state, with keyboard support and ARIA. The vanilla script is not used.
+
+## Install
+
+The package is not published to npm yet (see [License](#license)). Build it and install it from a local path:
+
+```sh
+cd react
+pnpm install
+pnpm build
+# in your app
+pnpm add /path/to/gawdy95/react
+```
+
+React 18 or newer is a peer dependency.
+
+## Quick start
+
+```tsx
+import "gawdy95-react/style.css";
+import { Button, GawdyRoot, Taskbar, Window, WordArt } from "gawdy95-react";
+
+export function App() {
+  return (
+    <GawdyRoot>
+      <WordArt as="h1" fill="rainbow" size="lg" shape="tilt">Hello</WordArt>
+      <Window pop icon="👋" title="hello.exe" controls={["min", "max", "close"]} status={["Ready"]}>
+        <Button variant="default">OK</Button>
+      </Window>
+      <Taskbar startItems={[{ label: "Programs", icon: "🗂️" }, "separator", { label: "Shut Down…", icon: "🔌" }]} />
+    </GawdyRoot>
+  );
+}
+```
+
+`<GawdyRoot>` puts `g95` on `<body>` while it is mounted, which gives you the desktop background, base font and scoped reset. Use `<GawdyRoot mode="scope">` to wrap a single region in a `div.g95` instead, so Gawdy95 can live inside a larger app. `useGawdyBody(enabled)` is the hook form, handy for a theme switch.
+
+## Components
+
+| Area | Components |
+| --- | --- |
+| Root | `GawdyRoot`, `useGawdyBody` |
+| Layout | `Wrap`, `Stack`, `Row`, `Grid` (`cols`), `Auto`, `Split`, `Panel` (`bevel`, `bg`, `chunky`, `pop`). All take `gap` (sets `--g`) and `as`. |
+| Windows | `Window`: `title`, `icon`, `controls={["help","min","max","close"]}`, `onClose`, `menu`, `status`, `notepad`, `active`, `pop`, `chunky`, `draggable` with `defaultPosition` |
+| Buttons | `Button` (`variant`: `normal`, `default`, `ok`, `danger`, `rainbow`, `flat`; `big`, `block`, `pressed`; pass `href` to render a link), `ButtonRow`, `buttonClass()` |
+| Forms | `Form` (`inline`), `Field` (links the label to its control automatically), `Label`, `Input`, `TextArea` (`mono`), `Select` (`options`), `Checkbox`, `Radio`, `Range`, `Progress` (`value`, `rainbow`, `animated`), `Groove` |
+| Data | `Tabs` (arrow keys, Home and End), `ListBox` (arrow keys, `onActivate` on Enter or double-click), `Tree`, `Table` (data-driven `columns` and `rows`, or your own `<thead>`/`<tbody>`) |
+| Desktop | `Desktop`, `DesktopIcons`, `DesktopIcon` (`onOpen`), `Taskbar` (`startItems`, `brand`, `tasks`, `tray`, `clock`), `Logo`, `Clock`, `useClock` |
+| Dialogs | `Dialog`: portal, focus trap, Escape and backdrop close, focus restored on close |
+| WordArt | `WordArt`: `fill`, `size`, `shape`, `motion`, `as` |
+| Extras | `Starburst`, `Badge`, `Blink`, `Stamp`, `Note`, `Alert`, `Tape`, `Construction`, `Marquee`, `Counter`, `Led`, `Banner`, `RainbowBar`, `RainbowText` |
+
+Controlled and uncontrolled: `Tabs` and `ListBox` take `value`/`onChange` or `defaultValue`. `Window` manages its own minimize and maximize state. Its close button hides the window unless you pass `onClose`, in which case you own visibility.
+
+## CSS changes on this branch
+
+These are small fixes to the root `gawdy95.css`, all candidates for upstream:
+
+- `<a class="g95-btn">` keeps button colours instead of link blue and underline.
+- The Start menu's side stripe reads `var(--g95-menu-brand, "Gawdy 95")`, so `Taskbar brand="…"` can rename it.
+- `.g95-menubar > button` looks like the other menu items, for clickable menu entries.
+- Status bar cells truncate with an ellipsis instead of pushing the window wider than a phone screen.
+
+## Development
+
+```sh
+pnpm dev         # kitchen-sink demo at http://localhost:5173 (demo/main.tsx)
+pnpm test        # Vitest + Testing Library
+pnpm build       # dist/index.js, dist/index.cjs, dist/style.css, dist/types
+pnpm build:demo  # static demo in demo-dist/
+```
+
+## License
+
+Upstream Gawdy95 has no license file, so `package.json` is marked `private` and `UNLICENSED`. Ask the upstream author to add a license before publishing this package or reusing it outside personal projects.

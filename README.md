@@ -149,3 +149,7 @@ Everything is driven by custom properties on `:root` in `gawdy95.css`:
 ## Browser support
 
 Built for current Chromium, Firefox and Safari. It uses `clip-path`, `background-clip: text`, `-webkit-text-stroke`, `paint-order`, and the individual `scale` and `rotate` properties in animations. Scrollbar styling uses `::-webkit-scrollbar`, so it applies in Chromium and Safari only. Animations respect `prefers-reduced-motion`.
+
+## React
+
+A typed React component library built on these styles lives in [`react/`](react/README.md). It renders the same `g95-*` and `wa-*` classes and reimplements `gawdy95.js` behaviour as React state.
