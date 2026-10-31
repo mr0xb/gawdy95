@@ -35,6 +35,25 @@ export function App() {
 }
 ```
 
+## Light and dark mode
+
+```tsx
+<GawdyRoot defaultTheme="system">
+  <ThemeSwitch />
+</GawdyRoot>
+```
+
+`<ThemeSwitch>` is a Win95-style toggle: a blue sky with a sun by day, and a starfield with a moon by night. Inside a `<GawdyRoot>` it needs no props. The root adds `g95-dark` to `<body>` (or to its wrapper in `scope` mode), remembers the pick in `localStorage` under `g95-theme`, and with `defaultTheme="system"` follows the OS until the user picks. Dialogs portalled to `<body>` pick up the theme too.
+
+Other ways to control it:
+
+- `<GawdyRoot theme={theme} onThemeChange={setTheme}>` for a controlled theme.
+- `themeStorageKey={null}` to not remember the pick.
+- `<ThemeSwitch theme onChange>` on its own, outside any root.
+- `useGawdyTheme({ defaultTheme, storageKey })` for the stateful hook by itself.
+
+Without React, add `g95-dark` next to `g95` and the CSS does the rest.
+
 `<GawdyRoot>` puts `g95` on `<body>` while it is mounted, which gives you the desktop background, base font and scoped reset. Use `<GawdyRoot mode="scope">` to wrap a single region in a `div.g95` instead, so Gawdy95 can live inside a larger app. `useGawdyBody(enabled)` is the hook form, handy for a theme switch.
 
 ## Components
@@ -44,6 +63,8 @@ export function App() {
 | Root | `GawdyRoot`, `useGawdyBody` |
 | Layout | `Wrap`, `Stack`, `Row`, `Grid` (`cols`), `Auto`, `Split`, `Panel` (`bevel`, `bg`, `chunky`, `pop`). All take `gap` (sets `--g`) and `as`. |
 | Windows | `Window`: `title`, `icon`, `controls={["help","min","max","close"]}`, `onClose`, `menu`, `status`, `notepad`, `active`, `pop`, `chunky`, `draggable` with `defaultPosition` |
+| Switches | `Switch` (on/off, `role="switch"`; `checked`/`defaultChecked`/`onChange`, `label`, `size="sm"`, custom `thumb`, `onText`, `offText`), `ThemeSwitch` (`theme`, `onChange`, `label={null}` to hide the text) |
+| Theme | `useGawdyTheme`, `useGawdyThemeContext`, `GawdyThemeContext` |
 | Buttons | `Button` (`variant`: `normal`, `default`, `ok`, `danger`, `rainbow`, `flat`; `big`, `block`, `pressed`; pass `href` to render a link), `ButtonRow`, `buttonClass()` |
 | Forms | `Form` (`inline`), `Field` (links the label to its control automatically), `Label`, `Input`, `TextArea` (`mono`), `Select` (`options`), `Checkbox`, `Radio`, `Range`, `Progress` (`value`, `rainbow`, `animated`), `Groove` |
 | Data | `Tabs` (arrow keys, Home and End), `ListBox` (arrow keys, `onActivate` on Enter or double-click), `Tree`, `Table` (data-driven `columns` and `rows`, or your own `<thead>`/`<tbody>`) |
@@ -62,6 +83,9 @@ These are small fixes to the root `gawdy95.css`, all candidates for upstream:
 - The Start menu's side stripe reads `var(--g95-menu-brand, "Gawdy 95")`, so `Taskbar brand="…"` can rename it.
 - `.g95-menubar > button` looks like the other menu items, for clickable menu entries.
 - Status bar cells truncate with an ellipsis instead of pushing the window wider than a phone screen.
+- Hard-coded `#fff` and `#000` on bevels, fields and grey surfaces now use variables: the existing `--g95-light` and `--g95-ink`, plus new `--g95-field`, `--g95-field-ink`, `--g95-field-alt`, `--g95-field-hover` and `--g95-field-focus`. Their defaults equal the old values, and screenshots of the kitchen sink are pixel-identical before and after.
+- A dark theme (`.g95-dark`): grey-violet chrome, purple-to-magenta title bars, green-on-black fields and a night desktop.
+- A `.g95-switch` component with a `--sm` size and a `--theme` sun/moon variant.
 
 ## Development
 

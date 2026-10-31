@@ -4,6 +4,16 @@ export { cx } from "./cx";
 export { GawdyRoot, useGawdyBody, type GawdyRootProps } from "./components/Root";
 export { Auto, Grid, Panel, Row, Split, Stack, Wrap, type Background, type GridProps, type PanelProps } from "./components/Layout";
 export { Window, type MenuBarItem, type WindowProps } from "./components/Window";
+export { Switch, ThemeSwitch, type SwitchProps, type ThemeSwitchProps } from "./components/Switch";
+export {
+  DEFAULT_THEME_STORAGE_KEY,
+  GawdyThemeContext,
+  useGawdyTheme,
+  useGawdyThemeContext,
+  type GawdyTheme,
+  type GawdyThemeContextValue,
+  type UseGawdyThemeOptions,
+} from "./components/Theme";
 export { Button, ButtonRow, buttonClass, type ButtonProps, type ButtonVariant } from "./components/Button";
 export {
   Checkbox,

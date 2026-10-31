@@ -30,10 +30,12 @@ import {
   Stack,
   Stamp,
   Starburst,
+  Switch,
   Table,
   Tabs,
   Tape,
   Taskbar,
+  ThemeSwitch,
   TextArea,
   Tree,
   Window,
@@ -51,11 +53,14 @@ function App() {
   const [dragOpen, setDragOpen] = useState(true);
 
   return (
-    <GawdyRoot>
+    <GawdyRoot defaultTheme="system">
       <Wrap>
         <Stack gap={28}>
           <header className="g95-u-center g95-u-rel">
             <Starburst color="red" corner style={{ right: "4%" }}>100% Gawdy!</Starburst>
+            <div className="g95-u-white g95-u-shadow" style={{ position: "absolute", left: 0, top: 0, zIndex: 6 }}>
+              <ThemeSwitch />
+            </div>
             <WordArt as="h1" fill="purple" size="xl" motion="wobble">Gawdy 95</WordArt>
             <br />
             <WordArt as="h2" fill="rainbow" size="sm" shape="tilt" className="g95-u-mt">Now in React. Still ugly.</WordArt>
@@ -88,6 +93,7 @@ function App() {
                   <Radio name="style" label="Blob (ew)" />
                 </Groove>
                 <Checkbox label="Subscribe to nugget-letter" defaultChecked />
+                <Switch label="Turbo nuggets" defaultChecked />
                 <Field label={`Hunger: ${hunger}%`}><Range value={hunger} onChange={(e) => setHunger(Number(e.target.value))} /></Field>
                 <Progress value={hunger} label="Hunger" />
                 <Progress animated rainbow label="Loading" />
@@ -196,7 +202,7 @@ function App() {
           { label: "Shut Down…", icon: "🔌", onSelect: () => setDialog(true) },
         ]}
         tasks={[{ id: "demo", label: "Gawdy 95", active: true }]}
-        tray={<span aria-hidden="true">🔊</span>}
+        tray={<><ThemeSwitch size="sm" label={null} /><span aria-hidden="true">🔊</span></>}
       />
     </GawdyRoot>
   );

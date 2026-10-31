@@ -1,6 +1,7 @@
 import { useEffect, useId, useRef, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { cx } from "../cx";
+import { useGawdyThemeContext } from "./Theme";
 
 export type DialogProps = {
   open: boolean;
@@ -18,9 +19,10 @@ export type DialogProps = {
 
 const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
-/** A modal message box. Rendered into `document.body` with a `.g95` wrapper so it works inside a scoped root too. */
+/** A modal message box. Rendered into `document.body` with a `.g95` wrapper (plus `.g95-dark` in dark mode) so it works inside a scoped root too. */
 export function Dialog({ open, onClose, title, glyph, actions, closeOnBackdrop = true, className, children }: DialogProps) {
   const titleId = useId();
+  const theme = useGawdyThemeContext()?.theme;
   const ref = useRef<HTMLDivElement>(null);
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
@@ -62,7 +64,7 @@ export function Dialog({ open, onClose, title, glyph, actions, closeOnBackdrop =
   if (!open) return null;
 
   return createPortal(
-    <div className="g95">
+    <div className={cx("g95", theme === "dark" && "g95-dark")}>
       <div className="g95-modal" onPointerDown={(e) => closeOnBackdrop && e.target === e.currentTarget && onClose()}>
         <div ref={ref} role="dialog" aria-modal="true" aria-labelledby={titleId} className={cx("g95-window g95-pop g95-dialog", className)}>
           <div className="g95-titlebar">
