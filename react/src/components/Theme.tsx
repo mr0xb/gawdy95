@@ -6,7 +6,7 @@ export type GawdyThemeContextValue = { theme: GawdyTheme; setTheme: (theme: Gawd
 
 export const GawdyThemeContext = createContext<GawdyThemeContextValue | null>(null);
 
-/** The theme from the nearest `<GawdyRoot>`, or null outside one. */
+/** The theme from the nearest `<GawdyRoot>` or `<GawdyModeProvider>`, or null outside one. */
 export function useGawdyThemeContext(): GawdyThemeContextValue | null {
   return useContext(GawdyThemeContext);
 }
@@ -15,19 +15,58 @@ export const DEFAULT_THEME_STORAGE_KEY = "g95-theme";
 
 const DARK_QUERY = "(prefers-color-scheme: dark)";
 
-function systemTheme(): GawdyTheme {
-  if (typeof window === "undefined" || typeof window.matchMedia !== "function") return "light";
-  return window.matchMedia(DARK_QUERY).matches ? "dark" : "light";
+function systemPrefersDark(): boolean {
+  return typeof window !== "undefined" && typeof window.matchMedia === "function" && window.matchMedia(DARK_QUERY).matches;
 }
 
-function readStored(key: string | null): GawdyTheme | null {
-  if (!key) return null;
-  try {
-    const v = localStorage.getItem(key);
-    return v === "light" || v === "dark" ? v : null;
-  } catch {
-    return null;
-  }
+/**
+ * A two-value preference that is remembered in localStorage once picked, and until then is either a fixed
+ * default or (with `system`) follows `prefers-color-scheme` live: `dark` maps to `whenDark`, light to `whenLight`.
+ */
+export function usePreference<T extends string>(
+  options: { whenLight: T; whenDark: T; defaultValue: T | "system"; storageKey: string | null },
+): [T, (value: T) => void] {
+  const { whenLight, whenDark, defaultValue, storageKey } = options;
+  const fromSystem = () => (systemPrefersDark() ? whenDark : whenLight);
+
+  const [picked, setPicked] = useState<T | null>(() => {
+    if (!storageKey) return null;
+    try {
+      const v = localStorage.getItem(storageKey);
+      return v === whenLight || v === whenDark ? (v as T) : null;
+    } catch {
+      return null;
+    }
+  });
+  const [fallback, setFallback] = useState<T>(() => (defaultValue === "system" ? fromSystem() : defaultValue));
+
+  useEffect(() => {
+    if (defaultValue !== "system") {
+      setFallback(defaultValue);
+      return;
+    }
+    if (picked !== null || typeof window.matchMedia !== "function") return;
+    const mq = window.matchMedia(DARK_QUERY);
+    const onChange = () => setFallback(mq.matches ? whenDark : whenLight);
+    onChange();
+    mq.addEventListener?.("change", onChange);
+    return () => mq.removeEventListener?.("change", onChange);
+  }, [defaultValue, picked, whenDark, whenLight]);
+
+  const set = useCallback(
+    (value: T) => {
+      setPicked(value);
+      if (!storageKey) return;
+      try {
+        localStorage.setItem(storageKey, value);
+      } catch {
+        // Storage unavailable: the choice lasts for this page load.
+      }
+    },
+    [storageKey],
+  );
+
+  return [picked ?? fallback, set];
 }
 
 export type UseGawdyThemeOptions = {
@@ -37,33 +76,7 @@ export type UseGawdyThemeOptions = {
   storageKey?: string | null;
 };
 
-/** Theme state that remembers the user's pick, and can follow the OS setting until they make one. */
+/** Gawdy95 light/dark state that remembers the user's pick, and can follow the OS setting until they make one. */
 export function useGawdyTheme({ defaultTheme = "light", storageKey = DEFAULT_THEME_STORAGE_KEY }: UseGawdyThemeOptions = {}): [GawdyTheme, (theme: GawdyTheme) => void] {
-  const fallback = () => (defaultTheme === "system" ? systemTheme() : defaultTheme);
-  const [picked, setPicked] = useState<GawdyTheme | null>(() => readStored(storageKey));
-  const [fallbackTheme, setFallbackTheme] = useState<GawdyTheme>(fallback);
-
-  useEffect(() => {
-    if (defaultTheme !== "system" || picked !== null || typeof window.matchMedia !== "function") return;
-    const mq = window.matchMedia(DARK_QUERY);
-    const onChange = () => setFallbackTheme(mq.matches ? "dark" : "light");
-    onChange();
-    mq.addEventListener?.("change", onChange);
-    return () => mq.removeEventListener?.("change", onChange);
-  }, [defaultTheme, picked]);
-
-  const setTheme = useCallback(
-    (theme: GawdyTheme) => {
-      setPicked(theme);
-      if (!storageKey) return;
-      try {
-        localStorage.setItem(storageKey, theme);
-      } catch {
-        // Storage unavailable: the choice lasts for this page load.
-      }
-    },
-    [storageKey],
-  );
-
-  return [picked ?? fallbackTheme, setTheme];
+  return usePreference<GawdyTheme>({ whenLight: "light", whenDark: "dark", defaultValue: defaultTheme, storageKey });
 }

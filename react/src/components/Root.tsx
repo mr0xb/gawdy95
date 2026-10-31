@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, type HTMLAttributes, type ReactNod
 import { cx } from "../cx";
 import { GawdyThemeContext, useGawdyTheme, type GawdyTheme, type UseGawdyThemeOptions } from "./Theme";
 
-const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
+export const useIsoLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
 
 let bodyUsers = 0;
 

@@ -6,10 +6,23 @@ export { Auto, Grid, Panel, Row, Split, Stack, Wrap, type Background, type GridP
 export { Window, type MenuBarItem, type WindowProps } from "./components/Window";
 export { Switch, ThemeSwitch, type SwitchProps, type ThemeSwitchProps } from "./components/Switch";
 export {
+  DEFAULT_MODE_STORAGE_KEY,
+  GawdyMode,
+  GawdyModeProvider,
+  GawdyModeSwitch,
+  useGawdyMode,
+  type GawdyModeContextValue,
+  type GawdyModeOptions,
+  type GawdyModeProviderProps,
+  type GawdyModeSwitchProps,
+  type GawdyUiMode,
+} from "./components/Mode";
+export {
   DEFAULT_THEME_STORAGE_KEY,
   GawdyThemeContext,
   useGawdyTheme,
   useGawdyThemeContext,
+  usePreference,
   type GawdyTheme,
   type GawdyThemeContextValue,
   type UseGawdyThemeOptions,

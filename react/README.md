@@ -35,7 +35,27 @@ export function App() {
 }
 ```
 
-## Light and dark mode
+## Switch between your UI and Gawdy95
+
+`<GawdyModeSwitch>` is a Gawdy95 light/dark switch whose light side (☀️) is your app's own UI and whose dark side (🌙) is Gawdy95:
+
+```tsx
+import "gawdy95-react/style.css";
+import { GawdyMode, GawdyModeProvider, GawdyModeSwitch } from "gawdy95-react";
+
+<GawdyModeProvider>
+  <header><GawdyModeSwitch /></header>
+  <GawdyMode custom={<MyApp />} gawdy={<MyGawdyApp />} />
+</GawdyModeProvider>
+```
+
+- **Your UI stays untouched:** in custom mode `<body>` has no Gawdy95 classes. In Gawdy mode the provider adds `g95`, plus `g95-dark` because the Gawdy side defaults to the dark theme. Pass `defaultGawdyTheme="light"` for classic grey. A `<ThemeSwitch>` inside the Gawdy UI can still flip it.
+- **Choice and default:** the pick is remembered under `g95-ui-mode`; pass `storageKey={null}` to forget it. `defaultMode` is `custom`, `gawdy`, or `system`, where a dark OS starts in Gawdy95.
+- **Reading the mode:** `useGawdyMode()` gives `{ mode, isGawdy, setMode, toggle }` for anything else that depends on it.
+- **Where to put the switch:** render it somewhere both UIs share, such as a top bar, so it keeps focus when the page swaps. It also works on its own (it then manages `<body>` itself), or controlled with `mode` and `onChange`.
+- **No `GawdyRoot` needed:** don't nest `<GawdyRoot>` inside the provider; the provider already does its job.
+
+## Light and dark mode inside Gawdy95
 
 ```tsx
 <GawdyRoot defaultTheme="system">
@@ -64,7 +84,8 @@ Without React, add `g95-dark` next to `g95` and the CSS does the rest.
 | Layout | `Wrap`, `Stack`, `Row`, `Grid` (`cols`), `Auto`, `Split`, `Panel` (`bevel`, `bg`, `chunky`, `pop`). All take `gap` (sets `--g`) and `as`. |
 | Windows | `Window`: `title`, `icon`, `controls={["help","min","max","close"]}`, `onClose`, `menu`, `status`, `notepad`, `active`, `pop`, `chunky`, `draggable` with `defaultPosition` |
 | Switches | `Switch` (on/off, `role="switch"`; `checked`/`defaultChecked`/`onChange`, `label`, `size="sm"`, custom `thumb`, `onText`, `offText`), `ThemeSwitch` (`theme`, `onChange`, `label={null}` to hide the text) |
-| Theme | `useGawdyTheme`, `useGawdyThemeContext`, `GawdyThemeContext` |
+| UI mode | `GawdyModeProvider`, `GawdyModeSwitch` (☀️ your UI / 🌙 Gawdy95), `GawdyMode`, `useGawdyMode` |
+| Theme | `useGawdyTheme`, `useGawdyThemeContext`, `GawdyThemeContext`, `usePreference` |
 | Buttons | `Button` (`variant`: `normal`, `default`, `ok`, `danger`, `rainbow`, `flat`; `big`, `block`, `pressed`; pass `href` to render a link), `ButtonRow`, `buttonClass()` |
 | Forms | `Form` (`inline`), `Field` (links the label to its control automatically), `Label`, `Input`, `TextArea` (`mono`), `Select` (`options`), `Checkbox`, `Radio`, `Range`, `Progress` (`value`, `rainbow`, `animated`), `Groove` |
 | Data | `Tabs` (arrow keys, Home and End), `ListBox` (arrow keys, `onActivate` on Enter or double-click), `Tree`, `Table` (data-driven `columns` and `rows`, or your own `<thead>`/`<tbody>`) |
@@ -90,7 +111,7 @@ These are small fixes to the root `gawdy95.css`, all candidates for upstream:
 ## Development
 
 ```sh
-pnpm dev         # kitchen-sink demo at http://localhost:5173 (demo/main.tsx)
+pnpm dev         # demo at http://localhost:5173: a plain "Acme" app (your UI) switching to the kitchen sink
 pnpm test        # Vitest + Testing Library
 pnpm build       # dist/index.js, dist/index.cjs, dist/style.css, dist/types
 pnpm build:demo  # static demo in demo-dist/

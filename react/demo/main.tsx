@@ -1,5 +1,7 @@
 import { StrictMode, useState } from "react";
 import { createRoot } from "react-dom/client";
+import { AcmeApp } from "./AcmeApp";
+import "./demo.css";
 import {
   Alert,
   Auto,
@@ -14,7 +16,9 @@ import {
   Dialog,
   Field,
   Form,
-  GawdyRoot,
+  GawdyMode,
+  GawdyModeProvider,
+  GawdyModeSwitch,
   Grid,
   Groove,
   Input,
@@ -46,21 +50,18 @@ import {
 
 const FILLS: WordArtFill[] = ["purple", "cyan", "red", "white", "outline", "rainbow", "chrome", "fire", "slime", "gold"];
 
-function App() {
+function GawdyApp() {
   const [dialog, setDialog] = useState(false);
   const [hunger, setHunger] = useState(70);
   const [picked, setPicked] = useState<string | null>("Grukk Stonejaw");
   const [dragOpen, setDragOpen] = useState(true);
 
   return (
-    <GawdyRoot defaultTheme="system">
+    <>
       <Wrap>
         <Stack gap={28}>
           <header className="g95-u-center g95-u-rel">
             <Starburst color="red" corner style={{ right: "4%" }}>100% Gawdy!</Starburst>
-            <div className="g95-u-white g95-u-shadow" style={{ position: "absolute", left: 0, top: 0, zIndex: 6 }}>
-              <ThemeSwitch />
-            </div>
             <WordArt as="h1" fill="purple" size="xl" motion="wobble">Gawdy 95</WordArt>
             <br />
             <WordArt as="h2" fill="rainbow" size="sm" shape="tilt" className="g95-u-mt">Now in React. Still ugly.</WordArt>
@@ -204,7 +205,18 @@ function App() {
         tasks={[{ id: "demo", label: "Gawdy 95", active: true }]}
         tray={<><ThemeSwitch size="sm" label={null} /><span aria-hidden="true">🔊</span></>}
       />
-    </GawdyRoot>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <GawdyModeProvider>
+      <div className="demo-bar">
+        <GawdyModeSwitch />
+      </div>
+      <GawdyMode custom={<AcmeApp />} gawdy={<GawdyApp />} />
+    </GawdyModeProvider>
   );
 }
 
