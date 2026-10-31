@@ -62,6 +62,9 @@ body.g95 {
 .g95 a:visited { color: #551a8b; }
 .g95 a:hover { color: var(--g95-danger); }
 .g95 a:active { color: #ff0000; }
+.g95 a.g95-btn, .g95 a.g95-btn:visited, .g95 a.g95-btn:hover, .g95 a.g95-btn:active { color: #000; text-decoration: none; }
+.g95 a.g95-btn--ok, .g95 a.g95-btn--danger, .g95 a.g95-btn--rainbow,
+.g95 a.g95-btn--ok:visited, .g95 a.g95-btn--danger:visited, .g95 a.g95-btn--rainbow:visited { color: #fff; }
 .g95 hr { border: 0; height: 4px; margin: 12px 0; background: var(--g95-rainbow); }
 .g95 hr.g95-etched { height: 2px; background: none; border-top: 1px solid var(--g95-shadow); border-bottom: 1px solid var(--g95-light); }
 .g95 ::selection { background: var(--g95-navy); color: #fff; }
@@ -143,12 +146,14 @@ body.g95 {
 .g95-menubar > * { padding: 2px 10px; cursor: default; position: relative; }
 .g95-menubar > *:hover { background: var(--g95-navy); color: #fff; }
 .g95-menubar u { text-decoration: underline; }
+.g95-menubar > button { all: unset; padding: 2px 10px; cursor: default; }
+.g95-menubar > button:hover, .g95-menubar > button:focus-visible { background: var(--g95-navy); color: #fff; }
 
 .g95-window__body { padding: 10px; flex: 1; min-height: 0; overflow: auto; }
 .g95-window__body.g95-notepad { background: #fff; margin: 4px; padding: 14px 16px; }
 .g95-statusbar { display: flex; gap: 4px; padding: 3px 2px 0; font-size: 15px; }
-.g95-statusbar > * { flex: 1; padding: 2px 8px; box-shadow: inset 1px 1px 0 var(--g95-shadow), inset -1px -1px 0 #fff; }
-.g95-statusbar > *:last-child { flex: none; }
+.g95-statusbar > * { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 2px 8px; box-shadow: inset 1px 1px 0 var(--g95-shadow), inset -1px -1px 0 #fff; }
+.g95-statusbar > *:last-child { flex: 0 1 auto; }
 
 /* ---------- buttons ---------- */
 .g95-btn {
@@ -289,7 +294,7 @@ body.g95 {
 .g95-tray { display: flex; align-items: center; gap: 8px; padding: 4px 12px; font-size: 16px; box-shadow: inset 1px 1px 0 var(--g95-shadow), inset -1px -1px 0 #fff; }
 .g95-menu { position: absolute; left: 0; bottom: 100%; margin-bottom: 4px; min-width: 260px; padding: 4px 4px 4px 40px; background: var(--g95-face); z-index: 1001;
   box-shadow: inset 2px 2px 0 #fff, inset -2px -2px 0 var(--g95-dark), 0 0 0 1px #000, 6px 6px 0 rgba(0,0,0,.5); }
-.g95-menu::before { content: "Gawdy 95"; position: absolute; left: 4px; top: 4px; bottom: 4px; width: 32px; background: linear-gradient(0deg, var(--g95-navy), var(--g95-sky));
+.g95-menu::before { content: var(--g95-menu-brand, "Gawdy 95"); position: absolute; left: 4px; top: 4px; bottom: 4px; width: 32px; background: linear-gradient(0deg, var(--g95-navy), var(--g95-sky));
   color: #fff; font: 900 22px/32px var(--g95-font-sys); writing-mode: vertical-rl; transform: rotate(180deg); text-align: left; padding: 8px 0; letter-spacing: 1px; }
 .g95-menu > a, .g95-menu > button { all: unset; box-sizing: border-box; display: flex; gap: 12px; padding: 10px 14px; cursor: pointer; color: #000; font: 700 18px/1 var(--g95-font-sys); width: 100%; }
 .g95-menu > a:hover, .g95-menu > button:hover { background: var(--g95-navy); color: #fff; }
