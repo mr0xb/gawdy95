@@ -55,6 +55,19 @@ import { GawdyMode, GawdyModeProvider, GawdyModeSwitch } from "gawdy95-react";
 - **Where to put the switch:** render it somewhere both UIs share, such as a top bar, so it keeps focus when the page swaps. It also works on its own (it then manages `<body>` itself), or controlled with `mode` and `onChange`.
 - **No `GawdyRoot` needed:** don't nest `<GawdyRoot>` inside the provider; the provider already does its job.
 
+### Three stops: your UI, Gawdy light, Gawdy dark
+
+`<GawdyUiSwitch>` is a three-position Win95 slider for when people should reach both Gawdy themes straight from your UI:
+
+```tsx
+<GawdyModeProvider>
+  <header><GawdyUiSwitch customLabel="Classic" size="sm" /></header>
+  <GawdyMode custom={<MyApp />} gawdy={<MyGawdyApp />} />
+</GawdyModeProvider>
+```
+
+It is a radio group named "Interface" with stops "Classic" (🖥️), "Gawdy 95 light" (☀️) and "Gawdy 95 dark" (🌙). Labels, icons and the visible caption are all props. Arrow keys move between stops, and Home and End jump to the ends. It sets both the provider's mode and its Gawdy theme, so both are remembered as usual. It must be rendered inside a `<GawdyModeProvider>`.
+
 ## Light and dark mode inside Gawdy95
 
 ```tsx
@@ -84,7 +97,7 @@ Without React, add `g95-dark` next to `g95` and the CSS does the rest.
 | Layout | `Wrap`, `Stack`, `Row`, `Grid` (`cols`), `Auto`, `Split`, `Panel` (`bevel`, `bg`, `chunky`, `pop`). All take `gap` (sets `--g`) and `as`. |
 | Windows | `Window`: `title`, `icon`, `controls={["help","min","max","close"]}`, `onClose`, `menu`, `status`, `notepad`, `active`, `pop`, `chunky`, `draggable` with `defaultPosition` |
 | Switches | `Switch` (on/off, `role="switch"`; `checked`/`defaultChecked`/`onChange`, `label`, `size="sm"`, custom `thumb`, `onText`, `offText`), `ThemeSwitch` (`theme`, `onChange`, `label={null}` to hide the text) |
-| UI mode | `GawdyModeProvider`, `GawdyModeSwitch` (☀️ your UI / 🌙 Gawdy95), `GawdyMode`, `useGawdyMode` |
+| UI mode | `GawdyModeProvider`, `GawdyModeSwitch` (☀️ your UI / 🌙 Gawdy95), `GawdyUiSwitch` (your UI / Gawdy light / Gawdy dark), `GawdyMode`, `useGawdyMode` |
 | Theme | `useGawdyTheme`, `useGawdyThemeContext`, `GawdyThemeContext`, `usePreference` |
 | Buttons | `Button` (`variant`: `normal`, `default`, `ok`, `danger`, `rainbow`, `flat`; `big`, `block`, `pressed`; pass `href` to render a link), `ButtonRow`, `buttonClass()` |
 | Forms | `Form` (`inline`), `Field` (links the label to its control automatically), `Label`, `Input`, `TextArea` (`mono`), `Select` (`options`), `Checkbox`, `Radio`, `Range`, `Progress` (`value`, `rainbow`, `animated`), `Groove` |

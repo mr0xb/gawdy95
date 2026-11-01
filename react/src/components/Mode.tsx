@@ -1,4 +1,4 @@
-import { createContext, forwardRef, useContext, useMemo, type ReactNode } from "react";
+import { createContext, forwardRef, useContext, useMemo, useRef, type HTMLAttributes, type KeyboardEvent, type ReactNode } from "react";
 import { cx } from "../cx";
 import { useGawdyBody, useIsoLayoutEffect } from "./Root";
 import { Switch, type SwitchProps } from "./Switch";
@@ -145,3 +145,110 @@ export const GawdyModeSwitch = forwardRef<HTMLButtonElement, GawdyModeSwitchProp
     />
   );
 });
+
+export type GawdyUiPosition = "custom" | "light" | "dark";
+
+export type GawdyUiSwitchProps = Omit<HTMLAttributes<HTMLDivElement>, "onChange" | "children"> & {
+  size?: "sm" | "md";
+  /** Accessible name of the whole control. Default "Interface". */
+  label?: string;
+  /** Visible text next to the track. Defaults to the selected stop's name; `null` hides it. */
+  caption?: ReactNode | null;
+  /** Name of your own UI's stop. Default "Classic". */
+  customLabel?: string;
+  lightLabel?: string;
+  darkLabel?: string;
+  customIcon?: ReactNode;
+  lightIcon?: ReactNode;
+  darkIcon?: ReactNode;
+  onChange?: (position: GawdyUiPosition) => void;
+};
+
+/**
+ * A three-stop Win95 slider inside a `<GawdyModeProvider>`: your own UI, Gawdy95 light, or Gawdy95 dark.
+ * It is a radio group: arrow keys move between stops, Home and End jump to the ends.
+ */
+export function GawdyUiSwitch({
+  size = "md",
+  label = "Interface",
+  caption,
+  customLabel = "Classic",
+  lightLabel = "Gawdy 95 light",
+  darkLabel = "Gawdy 95 dark",
+  customIcon = "🖥️",
+  lightIcon = "☀️",
+  darkIcon = "🌙",
+  onChange,
+  className,
+  style,
+  ...rest
+}: GawdyUiSwitchProps) {
+  const mode = useGawdyMode();
+  const theme = useContext(GawdyThemeContext);
+  const refs = useRef<(HTMLButtonElement | null)[]>([]);
+  if (!mode || !theme) throw new Error("GawdyUiSwitch must be rendered inside a <GawdyModeProvider>.");
+
+  const stops: { pos: GawdyUiPosition; name: string; icon: ReactNode }[] = [
+    { pos: "custom", name: customLabel, icon: customIcon },
+    { pos: "light", name: lightLabel, icon: lightIcon },
+    { pos: "dark", name: darkLabel, icon: darkIcon },
+  ];
+  const current: GawdyUiPosition = mode.isGawdy ? theme.theme : "custom";
+  const index = stops.findIndex((s) => s.pos === current);
+
+  const select = (pos: GawdyUiPosition) => {
+    if (pos === "custom") mode.setMode("custom");
+    else {
+      theme.setTheme(pos);
+      mode.setMode("gawdy");
+    }
+    onChange?.(pos);
+  };
+
+  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    let next: number | undefined;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = (index + 1) % stops.length;
+    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = (index - 1 + stops.length) % stops.length;
+    else if (e.key === "Home") next = 0;
+    else if (e.key === "End") next = stops.length - 1;
+    if (next === undefined) return;
+    e.preventDefault();
+    select(stops[next].pos);
+    refs.current[next]?.focus();
+  };
+
+  const shown = caption === undefined ? stops[index].name : caption;
+
+  return (
+    <div
+      role="radiogroup"
+      aria-label={label}
+      className={cx("g95-switch", "g95-switch--tri", size === "sm" && "g95-switch--sm", className)}
+      data-pos={index}
+      style={{ ...style, ["--i" as string]: String(index) }}
+      onKeyDown={onKeyDown}
+      {...rest}
+    >
+      <span className="g95-switch__track">
+        {stops.map((s, i) => (
+          <button
+            key={s.pos}
+            ref={(el) => { refs.current[i] = el; }}
+            type="button"
+            role="radio"
+            className="g95-switch__stop"
+            aria-checked={i === index}
+            aria-label={s.name}
+            title={s.name}
+            tabIndex={i === index ? 0 : -1}
+            onClick={() => select(s.pos)}
+          >
+            {s.icon}
+          </button>
+        ))}
+        <span className="g95-switch__thumb" aria-hidden="true">{stops[index].icon}</span>
+      </span>
+      {shown !== null && <span className="g95-switch__label" aria-hidden="true">{shown}</span>}
+    </div>
+  );
+}

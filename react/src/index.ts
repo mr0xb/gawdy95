@@ -10,12 +10,15 @@ export {
   GawdyMode,
   GawdyModeProvider,
   GawdyModeSwitch,
+  GawdyUiSwitch,
   useGawdyMode,
   type GawdyModeContextValue,
   type GawdyModeOptions,
   type GawdyModeProviderProps,
   type GawdyModeSwitchProps,
   type GawdyUiMode,
+  type GawdyUiPosition,
+  type GawdyUiSwitchProps,
 } from "./components/Mode";
 export {
   DEFAULT_THEME_STORAGE_KEY,

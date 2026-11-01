@@ -1,11 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
-import { DEFAULT_MODE_STORAGE_KEY, GawdyMode, GawdyModeProvider, GawdyModeSwitch, ThemeSwitch, useGawdyMode, type GawdyUiMode } from "../index";
+import { DEFAULT_MODE_STORAGE_KEY, GawdyMode, GawdyModeProvider, GawdyModeSwitch, GawdyUiSwitch, ThemeSwitch, useGawdyMode, type GawdyUiMode } from "../index";
 
 beforeEach(() => localStorage.clear());
 afterEach(() => {
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
 });
 
 function App(props: { defaultMode?: GawdyUiMode | "system"; defaultGawdyTheme?: "light" | "dark" }) {
@@ -99,4 +100,62 @@ test("standalone switch flips <body> by itself; controlled switch leaves it to t
   expect(seen).toEqual(["gawdy"]);
   expect(screen.getByRole("switch", { name: "Gawdy 95" })).toHaveAttribute("aria-checked", "true");
   expect(document.body).not.toHaveClass("g95");
+});
+
+function TriApp() {
+  return (
+    <GawdyModeProvider storageKey="ui" gawdyThemeStorageKey="theme">
+      <GawdyUiSwitch />
+      <GawdyMode custom={<h1>Acme dashboard</h1>} gawdy={<h1>Gawdy desktop</h1>} />
+    </GawdyModeProvider>
+  );
+}
+
+test("GawdyUiSwitch picks your UI, Gawdy light or Gawdy dark", async () => {
+  render(<TriApp />);
+  const group = screen.getByRole("radiogroup", { name: "Interface" });
+  const classic = screen.getByRole("radio", { name: "Classic" });
+  const light = screen.getByRole("radio", { name: "Gawdy 95 light" });
+  const dark = screen.getByRole("radio", { name: "Gawdy 95 dark" });
+  expect(classic).toHaveAttribute("aria-checked", "true");
+  expect(group).toHaveTextContent("Classic");
+  expect(document.body).not.toHaveClass("g95");
+
+  await userEvent.click(light);
+  expect(light).toHaveAttribute("aria-checked", "true");
+  expect(screen.getByRole("heading", { name: "Gawdy desktop" })).toBeVisible();
+  expect(document.body).toHaveClass("g95");
+  expect(document.body).not.toHaveClass("g95-dark");
+  expect(group).toHaveAttribute("data-pos", "1");
+
+  await userEvent.click(dark);
+  expect(document.body).toHaveClass("g95", "g95-dark");
+  expect(localStorage.getItem("ui")).toBe("gawdy");
+  expect(localStorage.getItem("theme")).toBe("dark");
+
+  await userEvent.click(classic);
+  expect(screen.getByRole("heading", { name: "Acme dashboard" })).toBeVisible();
+  expect(document.body).not.toHaveClass("g95");
+  expect(localStorage.getItem("ui")).toBe("custom");
+});
+
+test("GawdyUiSwitch moves with arrow keys, Home and End, keeping focus", async () => {
+  render(<TriApp />);
+  screen.getByRole("radio", { name: "Classic" }).focus();
+  await userEvent.keyboard("{ArrowRight}");
+  expect(screen.getByRole("radio", { name: "Gawdy 95 light" })).toHaveFocus();
+  expect(document.body).toHaveClass("g95");
+  await userEvent.keyboard("{End}");
+  expect(screen.getByRole("radio", { name: "Gawdy 95 dark" })).toHaveFocus();
+  expect(document.body).toHaveClass("g95-dark");
+  await userEvent.keyboard("{ArrowRight}");
+  expect(screen.getByRole("radio", { name: "Classic" })).toHaveFocus();
+  expect(document.body).not.toHaveClass("g95");
+  await userEvent.keyboard("{ArrowLeft}");
+  expect(screen.getByRole("radio", { name: "Gawdy 95 dark" })).toHaveAttribute("aria-checked", "true");
+});
+
+test("GawdyUiSwitch needs a provider", () => {
+  vi.spyOn(console, "error").mockImplementation(() => {});
+  expect(() => render(<GawdyUiSwitch />)).toThrow(/GawdyModeProvider/);
 });

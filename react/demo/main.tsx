@@ -18,7 +18,7 @@ import {
   Form,
   GawdyMode,
   GawdyModeProvider,
-  GawdyModeSwitch,
+  GawdyUiSwitch,
   Grid,
   Groove,
   Input,
@@ -213,7 +213,7 @@ function App() {
   return (
     <GawdyModeProvider>
       <div className="demo-bar">
-        <GawdyModeSwitch />
+        <GawdyUiSwitch customLabel="Acme" />
       </div>
       <GawdyMode custom={<AcmeApp />} gawdy={<GawdyApp />} />
     </GawdyModeProvider>
