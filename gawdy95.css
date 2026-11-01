@@ -73,9 +73,6 @@
   --g95-desktop: linear-gradient(160deg, #000000 0%, #2a0050 50%, #003838 100%);
   color-scheme: dark;
 }
-.g95-dark a { color: var(--g95-cyan); }
-.g95-dark a:visited { color: #ff99ff; }
-.g95-dark a:hover { color: var(--g95-yellow); }
 
 /* ---------- reset-ish ---------- */
 .g95, .g95 *, .g95 *::before, .g95 *::after { box-sizing: border-box; }
@@ -92,6 +89,9 @@ body.g95 {
 .g95 a:visited { color: #551a8b; }
 .g95 a:hover { color: var(--g95-danger); }
 .g95 a:active { color: #ff0000; }
+.g95-dark a { color: var(--g95-cyan); }
+.g95-dark a:visited { color: #ff99ff; }
+.g95-dark a:hover { color: var(--g95-yellow); }
 .g95 a.g95-btn, .g95 a.g95-btn:visited, .g95 a.g95-btn:hover, .g95 a.g95-btn:active { color: var(--g95-ink); text-decoration: none; }
 .g95 a.g95-btn--ok, .g95 a.g95-btn--danger, .g95 a.g95-btn--rainbow,
 .g95 a.g95-btn--ok:visited, .g95 a.g95-btn--danger:visited, .g95 a.g95-btn--rainbow:visited { color: #fff; }
