@@ -1,7 +1,11 @@
 body { margin: 0; }
 body:not(.g95) { background: #f6f7f9; color: #111827; font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
 
-.demo-bar { position: relative; z-index: 1100; display: flex; justify-content: flex-end; align-items: center; padding: 10px 16px; }
+.demo-bar { position: relative; z-index: 1100; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 10px 16px; }
+.demo-links { display: flex; gap: 14px; font-weight: 700; }
+body:not(.g95) .demo-links a { color: #4f46e5; }
+.g95 .demo-links a, .g95 .demo-links a:visited { color: var(--g95-yellow); }
+.g95 .demo-links a:hover { color: #fff; }
 body:not(.g95) .demo-bar { background: #fff; border-bottom: 1px solid #e5e7eb; }
 .g95 .demo-bar { color: #fff; text-shadow: 2px 2px 0 #000; padding-bottom: 0; }
 

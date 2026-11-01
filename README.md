@@ -4,6 +4,28 @@ A Windows 95 + WordArt CSS framework for quickly prototyping deliberately gaudy 
 
 The style: chunky grey bevels, navy-to-cyan title bars, rainbow gradients, and extruded, stroked WordArt text.
 
+**[▶ Live demo](https://treybae.github.io/gawdy95/)** (React components) · **[Vanilla CSS demo](https://treybae.github.io/gawdy95/vanilla/)** (the original kitchen sink)
+
+![Gawdy95 kitchen sink built with the React components](docs/preview/gawdy-light.png)
+
+## Preview
+
+A dark theme too: add `g95-dark`, or use the switches in the React package.
+
+![Gawdy95 dark theme](docs/preview/gawdy-dark.png)
+
+**Flip a whole app between your own UI, Gawdy95 light and Gawdy95 dark** with one switch (`GawdyUiSwitch`):
+
+![The interface switch moving from a plain dashboard to Gawdy95 light and dark](docs/preview/ui-switch.gif)
+
+| Windows, forms, tabs and tables | Start menu | Dialogs |
+| --- | --- | --- |
+| ![Form, tabs and spreadsheet table windows](docs/preview/components.png) | ![Taskbar with the Start menu open](docs/preview/start-menu.png) | ![A modal error dialog](docs/preview/dialog.png) |
+
+No build step needed for the plain CSS version either:
+
+![The original vanilla kitchen sink](docs/preview/vanilla.png)
+
 ## Files
 
 - `gawdy95.css`: tokens, bevels, components, WordArt, layout and utilities
@@ -153,3 +175,13 @@ Built for current Chromium, Firefox and Safari. It uses `clip-path`, `background
 ## React
 
 A typed React component library built on these styles lives in [`react/`](react/README.md). It renders the same `g95-*` and `wa-*` classes and reimplements `gawdy95.js` behaviour as React state.
+
+### Updating the live demo
+
+The demo is a static site on the `gh-pages` branch. To rebuild and publish it:
+
+```sh
+cd react
+pnpm install
+./scripts/deploy-pages.sh   # builds site-dist/ and pushes it to gh-pages
+```

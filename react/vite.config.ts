@@ -5,10 +5,11 @@ import { defineConfig } from "vitest/config";
 const here = (p: string) => fileURLToPath(new URL(p, import.meta.url));
 
 export default defineConfig(({ mode }) => ({
+  base: mode === "demo" ? "./" : "/",
   plugins: [react()],
   build:
     mode === "demo"
-      ? { outDir: "demo-dist" }
+      ? { outDir: "demo-dist", emptyOutDir: true }
       : {
           lib: {
             entry: here("src/index.ts"),

@@ -1,6 +1,7 @@
 import { StrictMode, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { AcmeApp } from "./AcmeApp";
+import "../../gawdy95.css";
 import "./demo.css";
 import {
   Alert,
@@ -211,8 +212,12 @@ function GawdyApp() {
 
 function App() {
   return (
-    <GawdyModeProvider>
+    <GawdyModeProvider defaultMode="gawdy" defaultGawdyTheme="light" storageKey="g95-demo-mode" gawdyThemeStorageKey="g95-demo-theme">
       <div className="demo-bar">
+        <nav className="demo-links" aria-label="Project">
+          <a href="https://github.com/treybae/gawdy95/tree/react-components">GitHub</a>
+          <a href="./vanilla/">Vanilla CSS demo</a>
+        </nav>
         <GawdyUiSwitch customLabel="Acme" />
       </div>
       <GawdyMode custom={<AcmeApp />} gawdy={<GawdyApp />} />
