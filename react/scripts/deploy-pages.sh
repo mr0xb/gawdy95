@@ -8,7 +8,11 @@ pnpm run build:site
 repo_root="$(git rev-parse --show-toplevel)"
 source_sha="$(git rev-parse --short HEAD)"
 worktree="$(mktemp -d)"
-trap 'git -C "$repo_root" worktree remove --force "$worktree" >/dev/null 2>&1 || true' EXIT
+cleanup() {
+  git -C "$repo_root" worktree remove --force "$worktree" >/dev/null 2>&1 || true
+  git -C "$repo_root" branch -D gh-pages-new >/dev/null 2>&1 || true
+}
+trap cleanup EXIT
 
 if git ls-remote --exit-code --heads origin gh-pages >/dev/null; then
   git fetch origin gh-pages
