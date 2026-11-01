@@ -68,6 +68,8 @@ import { GawdyMode, GawdyModeProvider, GawdyModeSwitch } from "gawdy95-react";
 
 It is a radio group named "Interface" with stops "Classic" (🖥️), "Gawdy 95 light" (☀️) and "Gawdy 95 dark" (🌙). Labels, icons and the visible caption are all props. Arrow keys move between stops, and Home and End jump to the ends. It sets both the provider's mode and its Gawdy theme, so both are remembered as usual. It must be rendered inside a `<GawdyModeProvider>`.
 
+With `includeCustom={false}` it has only the two Gawdy stops (☀️ light and 🌙 dark). While your UI is showing, neither stop is selected and the thumb is hidden, so one click enters either theme; the caption (also the group's accessible description) names the current UI. Give people another way back to your UI, such as a "Back to Classic" item in the Gawdy Start menu that calls `useGawdyMode().setMode("custom")`.
+
 ## Light and dark mode inside Gawdy95
 
 ```tsx

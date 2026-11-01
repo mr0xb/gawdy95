@@ -289,19 +289,22 @@ body.g95 {
 .g95-switch--theme[aria-checked="true"] .g95-switch__track { background: #000040 radial-gradient(circle, #fff 1px, transparent 1.5px) 0 0 / 11px 11px; }
 .g95-switch--theme .g95-switch__text { font-size: 17px; color: inherit; text-shadow: none; filter: drop-shadow(1px 1px 0 rgba(0,0,0,.45)); }
 .g95-switch--sm.g95-switch--theme .g95-switch__text { font-size: 13px; }
-/* three-stop variant: your UI / Gawdy light / Gawdy dark. Set --i (0, 1, 2) on the root for the thumb position. */
+/* stop variant: your UI / Gawdy light / Gawdy dark, or just the two Gawdy themes.
+   Set --n (stop count) and --i (selected stop) on the root, and data-pos to custom, light or dark. */
 .g95-switch--tri { cursor: default; }
-.g95-switch--tri .g95-switch__track { width: 120px; display: grid; grid-template-columns: repeat(3, 1fr); padding: 4px; }
-.g95-switch--sm.g95-switch--tri .g95-switch__track { width: 90px; padding: 4px; }
-.g95-switch--tri .g95-switch__thumb { left: calc(4px + var(--i, 0) * ((100% - 8px) / 3)); width: calc((100% - 8px) / 3); height: calc(100% - 8px); }
+.g95-switch--tri .g95-switch__track { width: calc(8px + var(--n, 3) * 37.33px); display: grid; grid-template-columns: repeat(var(--n, 3), 1fr); padding: 4px; }
+.g95-switch--sm.g95-switch--tri .g95-switch__track { width: calc(8px + var(--n, 3) * 27.33px); }
+.g95-switch--tri .g95-switch__thumb { left: calc(4px + var(--i, 0) * ((100% - 8px) / var(--n, 3))); width: calc((100% - 8px) / var(--n, 3)); height: calc(100% - 8px); }
 .g95-switch__stop { all: unset; box-sizing: border-box; position: relative; z-index: 2; display: grid; place-items: center; cursor: pointer;
   font: 700 15px/1 var(--g95-font-sys); opacity: .55; }
 .g95-switch--sm .g95-switch__stop { font-size: 12px; }
 .g95-switch__stop:hover { opacity: .9; }
 .g95-switch__stop[aria-checked="true"] { opacity: 0; }
+.g95-switch--tri[data-unset] .g95-switch__stop { opacity: .9; }
+.g95-switch--tri[data-unset] .g95-switch__stop:hover { opacity: 1; }
 .g95-switch__stop:focus-visible { opacity: 1; outline: 1px dotted var(--g95-ink); outline-offset: -3px; }
-.g95-switch--tri[data-pos="1"] .g95-switch__track { background: linear-gradient(180deg, #7ff9ff 0%, #1084d0 100%); }
-.g95-switch--tri[data-pos="2"] .g95-switch__track { background: #000040 radial-gradient(circle, #fff 1px, transparent 1.5px) 0 0 / 11px 11px; }
+.g95-switch--tri[data-pos="light"] .g95-switch__track { background: linear-gradient(180deg, #7ff9ff 0%, #1084d0 100%); }
+.g95-switch--tri[data-pos="dark"] .g95-switch__track { background: #000040 radial-gradient(circle, #fff 1px, transparent 1.5px) 0 0 / 11px 11px; }
 
 /* ---------- progress ---------- */
 .g95-progress { height: 32px; padding: 4px; background: var(--g95-field);

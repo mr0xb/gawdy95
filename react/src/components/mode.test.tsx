@@ -126,7 +126,7 @@ test("GawdyUiSwitch picks your UI, Gawdy light or Gawdy dark", async () => {
   expect(screen.getByRole("heading", { name: "Gawdy desktop" })).toBeVisible();
   expect(document.body).toHaveClass("g95");
   expect(document.body).not.toHaveClass("g95-dark");
-  expect(group).toHaveAttribute("data-pos", "1");
+  expect(group).toHaveAttribute("data-pos", "light");
 
   await userEvent.click(dark);
   expect(document.body).toHaveClass("g95", "g95-dark");
@@ -158,4 +158,56 @@ test("GawdyUiSwitch moves with arrow keys, Home and End, keeping focus", async (
 test("GawdyUiSwitch needs a provider", () => {
   vi.spyOn(console, "error").mockImplementation(() => {});
   expect(() => render(<GawdyUiSwitch />)).toThrow(/GawdyModeProvider/);
+});
+
+function TwoStopApp() {
+  const Back = () => {
+    const ctx = useGawdyMode()!;
+    return <button type="button" onClick={() => ctx.setMode("custom")}>Back to Classic</button>;
+  };
+  return (
+    <GawdyModeProvider storageKey="ui" gawdyThemeStorageKey="theme">
+      <GawdyUiSwitch includeCustom={false} />
+      <GawdyMode custom={<h1>Acme dashboard</h1>} gawdy={<><h1>Gawdy desktop</h1><Back /></>} />
+    </GawdyModeProvider>
+  );
+}
+
+test("includeCustom={false} offers only Gawdy light and dark, with nothing selected in your UI", async () => {
+  render(<TwoStopApp />);
+  const group = screen.getByRole("radiogroup", { name: "Interface" });
+  expect(screen.queryByRole("radio", { name: "Classic" })).toBeNull();
+  const light = screen.getByRole("radio", { name: "Gawdy 95 light" });
+  const dark = screen.getByRole("radio", { name: "Gawdy 95 dark" });
+  expect(light).toHaveAttribute("aria-checked", "false");
+  expect(dark).toHaveAttribute("aria-checked", "false");
+  expect(group).toHaveAttribute("data-unset");
+  expect(group).toHaveAccessibleDescription("Classic");
+  expect(group.querySelector(".g95-switch__thumb")).toBeNull();
+  expect(light).toHaveAttribute("tabindex", "0");
+
+  await userEvent.click(dark);
+  expect(document.body).toHaveClass("g95", "g95-dark");
+  expect(dark).toHaveAttribute("aria-checked", "true");
+  expect(group).not.toHaveAttribute("data-unset");
+  expect(group).toHaveAccessibleDescription("Gawdy 95 dark");
+  expect(group.querySelector(".g95-switch__thumb")).toHaveTextContent("🌙");
+
+  await userEvent.keyboard("{ArrowLeft}");
+  expect(light).toHaveFocus();
+  expect(document.body).not.toHaveClass("g95-dark");
+
+  await userEvent.click(screen.getByRole("button", { name: "Back to Classic" }));
+  expect(document.body).not.toHaveClass("g95");
+  expect(screen.getByRole("heading", { name: "Acme dashboard" })).toBeVisible();
+  expect(light).toHaveAttribute("aria-checked", "false");
+  expect(localStorage.getItem("ui")).toBe("custom");
+});
+
+test("includeCustom={false}: arrow keys from your UI enter Gawdy", async () => {
+  render(<TwoStopApp />);
+  screen.getByRole("radio", { name: "Gawdy 95 light" }).focus();
+  await userEvent.keyboard("{ArrowLeft}");
+  expect(screen.getByRole("radio", { name: "Gawdy 95 dark" })).toHaveFocus();
+  expect(document.body).toHaveClass("g95", "g95-dark");
 });

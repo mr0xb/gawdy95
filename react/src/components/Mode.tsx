@@ -1,4 +1,4 @@
-import { createContext, forwardRef, useContext, useMemo, useRef, type HTMLAttributes, type KeyboardEvent, type ReactNode } from "react";
+import { createContext, forwardRef, useContext, useId, useMemo, useRef, type HTMLAttributes, type KeyboardEvent, type ReactNode } from "react";
 import { cx } from "../cx";
 import { useGawdyBody, useIsoLayoutEffect } from "./Root";
 import { Switch, type SwitchProps } from "./Switch";
@@ -150,11 +150,17 @@ export type GawdyUiPosition = "custom" | "light" | "dark";
 
 export type GawdyUiSwitchProps = Omit<HTMLAttributes<HTMLDivElement>, "onChange" | "children"> & {
   size?: "sm" | "md";
+  /**
+   * Show a stop for your own UI. Default true. With `false` the switch only offers Gawdy light and Gawdy dark;
+   * while your UI is showing, neither stop is selected and the thumb is hidden, so one click enters either theme.
+   * Provide another way back to your UI (for example a "Back to Classic" item in a Gawdy menu).
+   */
+  includeCustom?: boolean;
   /** Accessible name of the whole control. Default "Interface". */
   label?: string;
-  /** Visible text next to the track. Defaults to the selected stop's name; `null` hides it. */
+  /** Visible text next to the track, also the group's description. Defaults to the current UI's name; `null` hides it. */
   caption?: ReactNode | null;
-  /** Name of your own UI's stop. Default "Classic". */
+  /** Name of your own UI. Default "Classic". */
   customLabel?: string;
   lightLabel?: string;
   darkLabel?: string;
@@ -165,11 +171,13 @@ export type GawdyUiSwitchProps = Omit<HTMLAttributes<HTMLDivElement>, "onChange"
 };
 
 /**
- * A three-stop Win95 slider inside a `<GawdyModeProvider>`: your own UI, Gawdy95 light, or Gawdy95 dark.
+ * A Win95 stop slider inside a `<GawdyModeProvider>`: your own UI, Gawdy95 light, or Gawdy95 dark
+ * (or just the two Gawdy themes with `includeCustom={false}`).
  * It is a radio group: arrow keys move between stops, Home and End jump to the ends.
  */
 export function GawdyUiSwitch({
   size = "md",
+  includeCustom = true,
   label = "Interface",
   caption,
   customLabel = "Classic",
@@ -186,15 +194,18 @@ export function GawdyUiSwitch({
   const mode = useGawdyMode();
   const theme = useContext(GawdyThemeContext);
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
+  const captionId = useId();
   if (!mode || !theme) throw new Error("GawdyUiSwitch must be rendered inside a <GawdyModeProvider>.");
 
-  const stops: { pos: GawdyUiPosition; name: string; icon: ReactNode }[] = [
+  const all: { pos: GawdyUiPosition; name: string; icon: ReactNode }[] = [
     { pos: "custom", name: customLabel, icon: customIcon },
     { pos: "light", name: lightLabel, icon: lightIcon },
     { pos: "dark", name: darkLabel, icon: darkIcon },
   ];
+  const stops = includeCustom ? all : all.slice(1);
   const current: GawdyUiPosition = mode.isGawdy ? theme.theme : "custom";
   const index = stops.findIndex((s) => s.pos === current);
+  const currentName = all.find((s) => s.pos === current)!.name;
 
   const select = (pos: GawdyUiPosition) => {
     if (pos === "custom") mode.setMode("custom");
@@ -206,26 +217,30 @@ export function GawdyUiSwitch({
   };
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    const n = stops.length;
     let next: number | undefined;
-    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = (index + 1) % stops.length;
-    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = (index - 1 + stops.length) % stops.length;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = index < 0 ? 0 : (index + 1) % n;
+    else if (e.key === "ArrowLeft" || e.key === "ArrowUp") next = index < 0 ? n - 1 : (index - 1 + n) % n;
     else if (e.key === "Home") next = 0;
-    else if (e.key === "End") next = stops.length - 1;
+    else if (e.key === "End") next = n - 1;
     if (next === undefined) return;
     e.preventDefault();
     select(stops[next].pos);
     refs.current[next]?.focus();
   };
 
-  const shown = caption === undefined ? stops[index].name : caption;
+  const shown = caption === undefined ? currentName : caption;
+  const focusable = index < 0 ? 0 : index;
 
   return (
     <div
       role="radiogroup"
       aria-label={label}
+      aria-describedby={shown !== null ? captionId : undefined}
       className={cx("g95-switch", "g95-switch--tri", size === "sm" && "g95-switch--sm", className)}
-      data-pos={index}
-      style={{ ...style, ["--i" as string]: String(index) }}
+      data-pos={current}
+      data-unset={index < 0 ? "" : undefined}
+      style={{ ...style, ["--n" as string]: String(stops.length), ["--i" as string]: String(Math.max(index, 0)) }}
       onKeyDown={onKeyDown}
       {...rest}
     >
@@ -240,15 +255,15 @@ export function GawdyUiSwitch({
             aria-checked={i === index}
             aria-label={s.name}
             title={s.name}
-            tabIndex={i === index ? 0 : -1}
+            tabIndex={i === focusable ? 0 : -1}
             onClick={() => select(s.pos)}
           >
             {s.icon}
           </button>
         ))}
-        <span className="g95-switch__thumb" aria-hidden="true">{stops[index].icon}</span>
+        {index >= 0 && <span className="g95-switch__thumb" aria-hidden="true">{stops[index].icon}</span>}
       </span>
-      {shown !== null && <span className="g95-switch__label" aria-hidden="true">{shown}</span>}
+      {shown !== null && <span className="g95-switch__label" id={captionId}>{shown}</span>}
     </div>
   );
 }
